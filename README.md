@@ -9,22 +9,27 @@ PINTOさんの「[TensorflowLite-bin](https://github.com/PINTO0309/TensorflowLit
 ノートPC等でも動作しますが、精度が必要であれば本リポジトリ以外の物体検出モデルをおすすめします。<br>
 また、ノートPC使用時は「model.onnx」のほうが高速なケースが多いです。※Core i7-8750Hで10ms前後
 
+# 元リポジトリからの変更点
+* demo.pyの引数から`--device`, `--movie`を削除(カメラモジュールを使用)
+* カメラモジュール用に[picamera2](https://github.com/raspberrypi/picamera2)を使用
+
 # Requirement 
 opencv-python 4.5.3.56 or later<br>
 tensorflow 2.8.0 or later ※[TensorflowLite-bin](https://github.com/PINTO0309/TensorflowLite-bin)の使用を推奨<br>
-onnxruntime 1.9.0 or later ※model.onnxを使用する場合のみ
+onnxruntime 1.9.0 or later ※model.onnxを使用する場合のみ<br>
+[picamera2](https://github.com/raspberrypi/picamera2)
 
 # Demo
 デモの実行方法は以下です。
 ```bash
 python demo.py
 ```
-* --device<br>
+<!-- * --device<br>
 カメラデバイス番号の指定<br>
-デフォルト：0
-* --movie<br>
+デフォルト：0 -->
+<!-- * --movie<br>
 動画ファイルの指定 ※指定時はカメラデバイスより優先<br>
-デフォルト：指定なし
+デフォルト：指定なし -->
 * --width<br>
 カメラキャプチャ時の横幅<br>
 デフォルト：640
