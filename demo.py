@@ -4,6 +4,7 @@ import copy
 import time
 import argparse
 
+from picamera2 import *
 import cv2
 
 from detector import Detector
@@ -12,8 +13,6 @@ from detector import Detector
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--device", type=int, default=0)
-    parser.add_argument("--movie", type=str, default=None)
     parser.add_argument("--width", help='cap width', type=int, default=640)
     parser.add_argument("--height", help='cap height', type=int, default=360)
 
@@ -52,12 +51,8 @@ def get_args():
 def main():
     # 引数解析 #################################################################
     args = get_args()
-    cap_device = args.device
     cap_width = args.width
     cap_height = args.height
-
-    if args.movie is not None:
-        cap_device = args.movie
 
     model_path = args.model
     input_shape = tuple(map(int, args.input_shape.split(',')))
@@ -66,9 +61,12 @@ def main():
     num_threads = args.num_threads
 
     # カメラ準備 ###############################################################
-    cap = cv2.VideoCapture(cap_device)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, cap_width)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, cap_height)
+    cap = Picamera2()
+    cap.start_preview()
+    config = cap.preview_configuration(main={"size": (cap_width, cap_height)})
+    cap.configure(config)
+
+    cap.start()
 
     # モデルロード #############################################################
     detector = Detector(
@@ -84,13 +82,13 @@ def main():
         start_time = time.time()
 
         # カメラキャプチャ ################################################
-        ret, frame = cap.read()
-        if not ret:
-            break
+        frame = cap.capture_array()
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2RGB)
         debug_image = copy.deepcopy(frame)
 
         # 推論実施 ########################################################
         bboxes, scores, class_ids = detector.inference(frame)
+        debug_image = cv2.cvtColor(debug_image, cv2.COLOR_RGB2BGR)
 
         elapsed_time = time.time() - start_time
 
@@ -113,7 +111,7 @@ def main():
         debug_image = cv2.resize(debug_image, (cap_width, cap_height))
         cv2.imshow('Person Detection Demo', debug_image)
 
-    cap.release()
+    cap.close()
     cv2.destroyAllWindows()
 
 
