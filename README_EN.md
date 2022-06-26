@@ -9,22 +9,27 @@ Using PINTO's [TensorflowLite-bin](https://github.com/PINTO0309/TensorflowLite-b
 It works on laptops, but if you need precision, we recommend an object discovery model other than this repository.<br>
 Also, when using a laptop PC, "model.onnx" is often faster. *Approximately 10ms on Core i7-8750H
 
+# Changes from the original repository
+* Removed `--device`,` --movie` from the arguments of demo.py(use the camera module)
+* Use [picamera2](https://github.com/raspberrypi/picamera2) to use the camera module 
+
 # Requirement 
 opencv-python 4.5.3.56 or later<br>
 tensorflow 2.8.0 or later *Recommended to use [TensorflowLite-bin](https://github.com/PINTO0309/TensorflowLite-bin)<br>
-onnxruntime 1.9.0 or later *Only when using model.onnx
+onnxruntime 1.9.0 or later *Only when using model.onnx<br>
+[picamera2](https://github.com/raspberrypi/picamera2)
 
 # Demo
 Here's how to run the demo.
 ```bash
 python demo.py
 ```
-* --device<br>
+<!-- * --device<br>
 Specifying the camera device number<br>
 Default：0
 * --movie<br>
 Specify video file *When specified, priority is given to the camera device<br>
-Default：unspecified
+Default：unspecified -->
 * --width<br>
 Width at the time of camera capture<br>
 Default：640
